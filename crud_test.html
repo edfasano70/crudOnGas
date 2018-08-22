@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>C.R.U.D. OPERATION ON GOOGLE SPREAD SHEET</title>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>-->
+    <!--Google icons-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+-->
+    <!--Bootstrap-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+      //var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
+      var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
+      var f;
+      
+      function insert_value() {
+      	$("#re").hide();
+        $("#loader").show();
+        var id1=	$("#id").val();
+      	var name= $("#name").val();
+        var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=insert";
+      
+        var request = jQuery.ajax({
+          crossDomain: true,
+          url: url ,
+          method: "GET",
+          dataType: "jsonp"
+        });
+      }
+
+      function update_value(){
+        $("#re").hide();
+        $("#loader").show();
+        var id1=	$("#id").val();
+        if(id1==="") id1="new";
+        var name= $("#name").val();
+        var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=update";
+
+        var request = jQuery.ajax({
+          crossDomain: true,
+          url: url ,
+          method: "GET",
+          dataType: "jsonp"
+        });
+      }
+
+      function delete_value(){
+        $("#re").hide();
+        $("#loader").show();
+        var id1 =	$("#id").val();
+        var name= $("#name").val();
+        var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=delete";
+
+        var request = jQuery.ajax({
+          crossDomain: true,
+          url: url ,
+          method: "GET",
+          dataType: "jsonp"
+        });
+      }
+
+      function ctrlq(e) {
+        f = e;
+        $("#re").html(e.action+":"+e.result);
+        $("#re").show();
+        $("#loader").hide();
+        
+        var tb = "<table class='table table-hover'><caption>"+"SpreadSheet:"+e.sheet+"</caption><thead><tr><td><b>ID</b></td><td><b>NAME</b></td><tr></thead>";
+        for (var i = 0; i < e.data.length; i++) {
+          tb += '<tr onClick="setForEdit('+i+')"><td>'+e.data[i].ID+'</td><td>'+e.data[i].NAME+'</td></tr>';
+        }
+        tb += "</table>";
+
+        $("#tableData").html(tb);
+        $("#inputForm").hide();
+        $("#showData").show();
+        $("#loader").hide();
+        $("#re").show();
+        resetInputs();
+    	}
+      
+      function read_value() {
+        $("#re").hide();
+        $("#loader").show();
+        var url = script_url+"?callback=ctrlq&action=read";
+
+        var request = jQuery.ajax({
+          crossDomain: true,
+          url: url ,
+          method: "GET",
+          dataType: "jsonp"
+        });
+      }
+
+      function setForEdit(row){
+        //alert(row+" set for edition "+f.data[row].ID);
+        $("#id").val(f.data[row].ID);
+        $("#name").val(f.data[row].NAME);
+        $("#inputForm").show();
+        $("#showData").hide();
+
+      }
+
+      function resetInputs(){
+        //alert(row+" set for edition "+f.data[row].ID);
+        $("#id").val("");
+        $("#name").val("");
+      }
+
+      function newRecord(){
+        $("#inputForm").show();
+        $("#showData").hide();
+      }
+
+      $(document).ready(function() {
+        read_value();
+      });
+
+
+      
+    </script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="jumbotron">
+      <h2>CRUD OPERATION ON GOOGLE SPREAD SHEET</h2>
+      <h4>WEB APPLICATION USING GOOGLE APP SCRIPT (GAS)</h4>
+      <h6>This is a simple application, You can develop your own logic based on your requiremets.
+      Be careful with the parameters you are sending, it should match the parameters that are received in GAS.</h6>
+    </div>
+
+       
+      <div class="row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4" style="text-align: left;" id="inputForm" >
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-sm" onclick="resetInputs();">
+            <span class="glyphicon glyphicon-erase"></span> Reset
+          </button>
+          <button type="button" class="btn btn-default btn-sm"  onclick="read_value()">
+            <span class="glyphicon glyphicon-list"></span> List
+          </button>
+          <button type="button" class="btn btn-default btn-sm" onclick="update_value()">
+            <span class="glyphicon glyphicon-save"></span> Save
+          </button>          
+          <button type="button" class="btn btn-default btn-sm" onclick="delete_value()">
+            <span class="glyphicon glyphicon-remove"></span> Delete
+          </button>
+        </div>
+      <form>
+        <div class="form-group">
+          <label for="id">ID</label>
+          <input type="text" class="form-control input-sm" maxlength="4" size="4" id="id" readonly="true" placeholder="New Record">
+        </div>
+        <div class="form-group">
+          <label for="name">NAME</label>
+          <input type="text" class="form-control input-sm" maxlength="80" size="80" id="name" placeholder="Name + Surname">
+        </div>
+      </form>
+      <script>$("#inputForm").hide();</script>
+            
+      <div id="loader">Processing... Wait a few seconds... <br></div>
+      <script>$("#loader").hide()</script>
+      <p id="re"></p>
+      <!--<input type = "button" id = "b1" onClick="insert_value();" value = "Insert" />-->
+
+      </div>
+
+      </div>
+      <!--<input type = "button" id = "b4" onclick="delete_value();" value="Delete" /> -->
+      <!-- <a href="https://docs.google.com/spreadsheets/d/1OmqvphAqP4WEcrsZAMNNeL2YVn3RJffVOIGgdPiyEVA/edit?usp=sharing" target="_blank">Click here to open Spread Sheet </a> -->
+      <div id="showData">
+        <div id="tableData" align="center"></div>
+        <button id='newRecord' type='button' class='btn btn-default btn-sm' onclick='newRecord();'><span class='glyphicon glyphicon-plus-sign'></span> New </button>
+        <br><br>
+      </div>
+      <script>$("#showData").hide()</script>
+
+    <div class="well" align="center">
+      <h6>@EdFasano70 2018 | All Rights Reserved</h6>
+      <h6>Based on ANDROID LABS' script from 2017</h6>
+    </div>
+    </div>
+
+  </body>
+<html>
+
+
+
+
+
