@@ -2,29 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="https://yoamoprogramar.com/wp-content/uploads/2018/01/CRUD.png" type="image/x-icon">
     <title>C.R.U.D. OPERATION ON GOOGLE SPREAD SHEET</title>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>-->
-    <!--Google icons-->
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
--->
     <!--Bootstrap-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     <script>
       //var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
       var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
+      var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
+      var table      ="DATA";
+      
+      script_url +="?callback=ctrlq&database="+database+"&table="+table;
       var f;
       
       function insert_value() {
-      	$("#re").hide();
-        $("#loader").show();
-        var id1=	$("#id").val();
-      	var name= $("#name").val();
-        var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=insert";
+      	$("#loader").show();
+        var id1  =	$("#id").val();
+      	var name = $("#name").val();
+        var url  = script_url+"&name="+name+"&id="+id1+"&action=insert";
       
         var request = jQuery.ajax({
           crossDomain: true,
@@ -35,45 +35,74 @@
       }
 
       function update_value(){
-        $("#re").hide();
-        $("#loader").show();
-        var id1=	$("#id").val();
-        if(id1==="") id1="new";
-        var name= $("#name").val();
-        var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=update";
+        bootbox.confirm({
+          size:'small',
+          message:"Are you sure?",
+          callback: function(result){ /* your callback code */ 
+          if(result==true){
+            $("#loader").show();
+            var id1=	$("#id").val();
+            if(id1==="") id1="new";
+            var name= $("#name").val();
+            var url = script_url+ "&name="+name+"&id="+id1+"&action=update";
 
-        var request = jQuery.ajax({
-          crossDomain: true,
-          url: url ,
-          method: "GET",
-          dataType: "jsonp"
+            var request = jQuery.ajax({
+              crossDomain: true,
+              url: url ,
+              method: "GET",
+              dataType: "jsonp"
+            });
+          }
+        }
         });
       }
 
       function delete_value(){
-        $("#re").hide();
-        $("#loader").show();
-        var id1 =	$("#id").val();
-        var name= $("#name").val();
-        var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=delete";
+        bootbox.confirm({
+          size:'small',
+          message:"Are you sure?",
+          callback: function(result){ /* your callback code */ 
+          if(result==true){
+            $("#loader").show();
+            var id1 =	$("#id").val();
+            var name= $("#name").val();
+            var url =script_url+"&id="+id1+"&action=delete";
 
-        var request = jQuery.ajax({
-          crossDomain: true,
-          url: url ,
-          method: "GET",
-          dataType: "jsonp"
+            var request = jQuery.ajax({
+              crossDomain: true,
+              url: url ,
+              method: "GET",
+              dataType: "jsonp"
+            });
+          }
+        }
         });
       }
 
       function ctrlq(e) {
-        f = e;
-        $("#re").html(e.action+":"+e.result);
-        $("#re").show();
+        f = e;  // <-- hay que arreglar esto
+        var i;
+        var j;
+        var k;
+
+        console.log(e.action+" : "+e.result);
         $("#loader").hide();
         
-        var tb = "<table class='table table-hover'><caption>"+"SpreadSheet:"+e.sheet+"</caption><thead><tr><td><b>ID</b></td><td><b>NAME</b></td><tr></thead>";
-        for (var i = 0; i < e.data.length; i++) {
-          tb += '<tr onClick="setForEdit('+i+')"><td>'+e.data[i].ID+'</td><td>'+e.data[i].NAME+'</td></tr>';
+        var tb = "<table class='table table-hover table-condensed table-bordered'><caption>"+e.spreadsheet+" : "+e.sheet+"</caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();'></span></td>";
+        for(i=0; i<e.title.length; i++) {
+          tb += "<td><b>"+e.title[i].CAPTION+"</b></td>";
+        }
+        tb+="<tr></thead>";
+
+
+
+
+        for (i = 0; i < e.data.length; i++) {
+          tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil"></span></td>';
+
+            for(j=0;j<e.title.length;j++) tb+='<td>'+e.data[i][j]+'</td>';
+          
+          tb+='</tr>';
         }
         tb += "</table>";
 
@@ -81,14 +110,13 @@
         $("#inputForm").hide();
         $("#showData").show();
         $("#loader").hide();
-        $("#re").show();
         resetInputs();
+        hideEditIcons();
     	}
       
       function read_value() {
-        $("#re").hide();
         $("#loader").show();
-        var url = script_url+"?callback=ctrlq&action=read";
+        var url =script_url+ "&action=read";
 
         var request = jQuery.ajax({
           crossDomain: true,
@@ -99,16 +127,14 @@
       }
 
       function setForEdit(row){
-        //alert(row+" set for edition "+f.data[row].ID);
-        $("#id").val(f.data[row].ID);
-        $("#name").val(f.data[row].NAME);
+        $("#id").val(f.data[row][0]);
+        $("#name").val(f.data[row][1]);
         $("#inputForm").show();
         $("#showData").hide();
 
       }
 
       function resetInputs(){
-        //alert(row+" set for edition "+f.data[row].ID);
         $("#id").val("");
         $("#name").val("");
       }
@@ -118,11 +144,17 @@
         $("#showData").hide();
       }
 
+      function showEditIcon(row){
+        $("#editRecordIcon"+row).show();
+      }
+
+      function hideEditIcons(){
+        $("[id*=editRecordIcon]").hide();
+      }
+
       $(document).ready(function() {
         read_value();
       });
-
-
       
     </script>
   </head>
@@ -143,7 +175,7 @@
           <button type="button" class="btn btn-default btn-sm" onclick="resetInputs();">
             <span class="glyphicon glyphicon-erase"></span> Reset
           </button>
-          <button type="button" class="btn btn-default btn-sm"  onclick="read_value()">
+          <button type="button" class="btn btn-default btn-sm"  onclick='$("#inputForm").hide();$("#showData").show();'>
             <span class="glyphicon glyphicon-list"></span> List
           </button>
           <button type="button" class="btn btn-default btn-sm" onclick="update_value()">
@@ -165,29 +197,25 @@
       </form>
       <script>$("#inputForm").hide();</script>
             
-      <div id="loader">Processing... Wait a few seconds... <br></div>
-      <script>$("#loader").hide()</script>
-      <p id="re"></p>
-      <!--<input type = "button" id = "b1" onClick="insert_value();" value = "Insert" />-->
-
       </div>
 
       </div>
-      <!--<input type = "button" id = "b4" onclick="delete_value();" value="Delete" /> -->
-      <!-- <a href="https://docs.google.com/spreadsheets/d/1OmqvphAqP4WEcrsZAMNNeL2YVn3RJffVOIGgdPiyEVA/edit?usp=sharing" target="_blank">Click here to open Spread Sheet </a> -->
+      <div class="alert alert-info" id="loader" align="center">
+        <strong>Info!</strong> <span class="glyphicon glyphicon-hourglass"></span>  Processing... Wait a few seconds... 
+      </div>
+      
       <div id="showData">
         <div id="tableData" align="center"></div>
-        <button id='newRecord' type='button' class='btn btn-default btn-sm' onclick='newRecord();'><span class='glyphicon glyphicon-plus-sign'></span> New </button>
         <br><br>
       </div>
       <script>$("#showData").hide()</script>
-
+    <!--<p id="re"></p>-->
     <div class="well" align="center">
       <h6>@EdFasano70 2018 | All Rights Reserved</h6>
       <h6>Based on ANDROID LABS' script from 2017</h6>
     </div>
     </div>
-
+  
   </body>
 <html>
 
