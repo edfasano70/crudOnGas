@@ -7,6 +7,7 @@
     <!--Bootstrap-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
@@ -88,7 +89,7 @@
         console.log(e.action+" : "+e.result);
         $("#loader").hide();
         
-        var tb = "<table class='table table-hover table-condensed table-bordered'><caption>"+e.spreadsheet+" : "+e.sheet+"</caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();'></span></td>";
+        var tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+e.spreadsheet+" : "+e.sheet+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
         for(i=0; i<e.title.length; i++) {
           tb += "<td><b>"+e.title[i].CAPTION+"</b></td>";
         }
@@ -98,7 +99,7 @@
 
 
         for (i = 0; i < e.data.length; i++) {
-          tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil"></span></td>';
+          tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
 
             for(j=0;j<e.title.length;j++) tb+='<td>'+e.data[i][j]+'</td>';
           
@@ -154,6 +155,7 @@
 
       $(document).ready(function() {
         read_value();
+        $('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
       });
       
     </script>
@@ -201,12 +203,15 @@
 
       </div>
       <div class="alert alert-info" id="loader" align="center">
-        <strong>Info!</strong> <span class="glyphicon glyphicon-hourglass"></span>  Processing... Wait a few seconds... 
+        <strong>Info!  </strong> <i class="fa fa-spinner fa-spin" style="font-size:24px; color:green"></i>  Processing... Wait a few seconds... 
       </div>
       
       <div id="showData">
         <div id="tableData" align="center"></div>
-        <br><br>
+        <div align="right">
+          <a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='font-size:40px;color: #32CD32'></span></a>
+        </div>
+        <br>
       </div>
       <script>$("#showData").hide()</script>
     <!--<p id="re"></p>-->
