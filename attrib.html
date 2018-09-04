@@ -5,15 +5,34 @@
 	<title>Document</title>
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	 <script>
+	 	function checkForAllowedChars(a,b){
+	 		var c="";
+	 		for(var i=0;i<a.length;i++){
+	 			for(var j=0;j<b.length;j++){
+	 				if(a.charAt(i).toUpperCase()==b.charAt(j).toUpperCase()){
+	 					j=b.length;
+	 					c+=a.charAt(i);
+	 				}
+	 			}
+	 		}
+	 		return c;
+	 	}
+
+	 	function inputValidate(a){
+	 		var valData=JSON.parse($(a).attr('validation'));
+			if(valData.uppercase) $(a).val($(a).val().toUpperCase());
+	 		if(valData.allowedchars+"1"!="1") $(a).val(checkForAllowedChars($(a).val(),valData.allowedchars));
+	 	}
+
 	 	$(document).ready(function() {
 	 		$('input').keyup(function(){
-	 			var valData=JSON.parse($(this).attr('validation'));
-	 			alert(valData.uppercase);
+	 			inputValidate(this);
 	 		});
 	 	});
 	 </script>
 </head>
 <body>
-	<input id="input1" type="text" validation='{"allowedchars":"0123456789","uppercase":true,"required":true}'>
+	Nombre Completo<input id="input1" type="text" validation='{"allowedchars":"abcdefghijklmnopqrstuvwxyz ","uppercase":true,"required":true}' maxlength="20"><br>
+	Edad<input id="input1" type="text" validation='{"allowedchars":"0123456789","required":true}' maxlength="2">
 </body>
 </html>
