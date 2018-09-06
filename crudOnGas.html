@@ -16,24 +16,9 @@
       //var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
       var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
       var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
-      var table      ="DATA";
+      var table      = "CLIENTES";
       
-      script_url +="?callback=ctrlq&database="+database+"&table="+table;
-      var f;
-      
-      function insert_value() {
-      	$("#loader").show();
-        var id1  =	$("#id").val();
-      	var name = $("#name").val();
-        var url  = script_url+"&name="+name+"&id="+id1+"&action=insert";
-      
-        var request = jQuery.ajax({
-          crossDomain: true,
-          url: url ,
-          method: "GET",
-          dataType: "jsonp"
-        });
-      }
+      var f; //LA VARIALE GLOBAL que contiene todos los parámetros
 
       function update_value(){
         bootbox.confirm({
@@ -42,10 +27,17 @@
           callback: function(result){ /* your callback code */ 
           if(result==true){
             $("#loader").show();
-            var id1=	$("#id").val();
-            if(id1==="") id1="new";
-            var name= $("#name").val();
-            var url = script_url+ "&name="+name+"&id="+id1+"&action=update";
+            
+            var dataToSend = {
+              callback : 'ctrlq',
+              database : database,
+              table    : table,
+              action   : 'U',
+              row      : getFormParams()
+            }
+            
+            var url =script_url+'?data='+JSON.stringify(dataToSend);    
+            console.log('update: url= '+url);
 
             var request = jQuery.ajax({
               crossDomain: true,
@@ -61,13 +53,21 @@
       function delete_value(){
         bootbox.confirm({
           size:'small',
-          message:"Are you sure?",
+          message:"Are you sure to delete record?",
           callback: function(result){ /* your callback code */ 
           if(result==true){
             $("#loader").show();
-            var id1 =	$("#id").val();
-            var name= $("#name").val();
-            var url =script_url+"&id="+id1+"&action=delete";
+
+            var dataToSend = {
+              callback : 'ctrlq',
+              database : database,
+              table    : table,
+              action   : 'D',
+              row      : getFormParams()
+            };
+            var url =script_url+'?data='+JSON.stringify(dataToSend);
+            console.log('delete: url= '+url);
+
 
             var request = jQuery.ajax({
               crossDomain: true,
@@ -85,29 +85,32 @@
         var i;
         var j;
         var k;
+        var tb=""; // tabla de despliegue de datos
+        var fm=""; // forma de entrada de datos
 
         console.log(e.action+" : "+e.result);
         $("#loader").hide();
         
-        var tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+e.spreadsheet+" : "+e.sheet+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
-        for(i=0; i<e.title.length; i++) {
-          tb += "<td><b>"+e.title[i].CAPTION+"</b></td>";
+        tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+e.spreadsheet+" : "+e.sheet+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
+        for(i=0; i<e.data[0].length; i++) {
+          tb += "<td><b>"+e.data[0][i]+"</b></td>";
         }
         tb+="<tr></thead>";
-
-
-
-
-        for (i = 0; i < e.data.length; i++) {
+        for (i = 1; i < e.data.length; i++) {
           tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
 
-            for(j=0;j<e.title.length;j++) tb+='<td>'+e.data[i][j]+'</td>';
+            for(j=0;j<e.data[0].length;j++) tb+='<td>'+e.data[i][j]+'</td>';
           
           tb+='</tr>';
         }
         tb += "</table>";
 
+        for(i=0; i<e.data[0].length; i++) {
+          fm+='<div class="form-group"><label for="'+e.data[0][i]+'">'+e.data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+e.data[0][i]+'"></div>';
+        }
+
         $("#tableData").html(tb);
+        $("#newForm").html(fm);
         $("#inputForm").hide();
         $("#showData").show();
         $("#loader").hide();
@@ -117,7 +120,16 @@
       
       function read_value() {
         $("#loader").show();
-        var url =script_url+ "&action=read";
+
+        var dataToSend = {
+          callback : 'ctrlq',
+          database : database,
+          table    : table,
+          action   : 'R'
+        };
+        var url =script_url+'?data='+JSON.stringify(dataToSend);
+        console.log('read: url= '+url);
+
 
         var request = jQuery.ajax({
           crossDomain: true,
@@ -128,16 +140,15 @@
       }
 
       function setForEdit(row){
-        $("#id").val(f.data[row][0]);
-        $("#name").val(f.data[row][1]);
+        for(i=0; i<f.data[0].length; i++) {
+          $("#input"+i).val(f.data[row][i]);
+        }
         $("#inputForm").show();
         $("#showData").hide();
-
       }
 
       function resetInputs(){
-        $("#id").val("");
-        $("#name").val("");
+        $("input").val("");
       }
 
       function newRecord(){
@@ -153,9 +164,45 @@
         $("[id*=editRecordIcon]").hide();
       }
 
+      function getFormParams(){
+        var param=[];
+        for(var i=0; i<f.data[0].length; i++) {
+          param.push($("#input"+i).val());
+        }
+        return param
+      }
+
       $(document).ready(function() {
         read_value();
         $('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
+        
+        $('#buttonResetValues').click(
+          function(){
+            resetInputs();
+          }
+        );
+
+        $('#buttonList').click(
+          function(){
+            $("#inputForm").hide();
+            $("#showData").show();
+          }
+        );        
+
+        $('#buttonSave').click(
+          function(){
+            update_value();
+          }
+        );
+
+        $('#buttonDelete').click(
+          function(){
+            delete_value();
+          }
+        );
+
+
+
       });
       
     </script>
@@ -174,31 +221,24 @@
       <div class="col-sm-4"></div>
       <div class="col-sm-4" style="text-align: left;" id="inputForm" >
         <div class="btn-group">
-          <button type="button" class="btn btn-default btn-sm" onclick="resetInputs();">
+          <button type="button" id="buttonResetValues" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-erase"></span> Reset
           </button>
-          <button type="button" class="btn btn-default btn-sm"  onclick='$("#inputForm").hide();$("#showData").show();'>
+          <button type="button" id="buttonList" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-list"></span> List
           </button>
-          <button type="button" class="btn btn-default btn-sm" onclick="update_value()">
+          <button type="button" id="buttonSave" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-save"></span> Save
           </button>          
-          <button type="button" class="btn btn-default btn-sm" onclick="delete_value()">
+          <button type="button" id="buttonDelete" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-remove"></span> Delete
           </button>
         </div>
       <form>
-        <div class="form-group">
-          <label for="id">ID</label>
-          <input type="text" class="form-control input-sm" maxlength="4" size="4" id="id" readonly="true" placeholder="New Record">
-        </div>
-        <div class="form-group">
-          <label for="name">NAME</label>
-          <input type="text" class="form-control input-sm" maxlength="80" size="80" id="name" placeholder="Name + Surname">
-        </div>
       </form>
       <script>$("#inputForm").hide();</script>
-            
+            <div id="newForm"></div>
+
       </div>
 
       </div>
