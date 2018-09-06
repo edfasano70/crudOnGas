@@ -27,7 +27,6 @@
           callback: function(result){ /* your callback code */ 
           if(result==true){
             $("#loader").show();
-            
             var dataToSend = {
               callback : 'ctrlq',
               database : database,
@@ -35,19 +34,25 @@
               action   : 'U',
               row      : getFormParams()
             }
-            
             var url =script_url+'?data='+JSON.stringify(dataToSend);    
             console.log('update: url= '+url);
-
-            var request = jQuery.ajax({
-              crossDomain: true,
-              url: url ,
-              method: "GET",
-              dataType: "jsonp"
-            });
+            makeAjax(url);
           }
         }
         });
+      }
+
+      function read_value() {
+        $("#loader").show();
+        var dataToSend = {
+          callback : 'ctrlq',
+          database : database,
+          table    : table,
+          action   : 'R'
+        };
+        var url =script_url+'?data='+JSON.stringify(dataToSend);
+        console.log('read: url= '+url);
+        makeAjax(url);
       }
 
       function delete_value(){
@@ -57,7 +62,6 @@
           callback: function(result){ /* your callback code */ 
           if(result==true){
             $("#loader").show();
-
             var dataToSend = {
               callback : 'ctrlq',
               database : database,
@@ -67,16 +71,18 @@
             };
             var url =script_url+'?data='+JSON.stringify(dataToSend);
             console.log('delete: url= '+url);
-
-
-            var request = jQuery.ajax({
-              crossDomain: true,
-              url: url ,
-              method: "GET",
-              dataType: "jsonp"
-            });
+            makeAjax(url);
           }
         }
+        });
+      }
+
+      function makeAjax(url){
+        var request = jQuery.ajax({
+          crossDomain: true,
+          url: url,
+          method: "GET",
+          dataType: "jsonp"
         });
       }
 
@@ -118,27 +124,6 @@
         hideEditIcons();
     	}
       
-      function read_value() {
-        $("#loader").show();
-
-        var dataToSend = {
-          callback : 'ctrlq',
-          database : database,
-          table    : table,
-          action   : 'R'
-        };
-        var url =script_url+'?data='+JSON.stringify(dataToSend);
-        console.log('read: url= '+url);
-
-
-        var request = jQuery.ajax({
-          crossDomain: true,
-          url: url ,
-          method: "GET",
-          dataType: "jsonp"
-        });
-      }
-
       function setForEdit(row){
         for(i=0; i<f.data[0].length; i++) {
           $("#input"+i).val(f.data[row][i]);
@@ -200,9 +185,6 @@
             delete_value();
           }
         );
-
-
-
       });
       
     </script>
