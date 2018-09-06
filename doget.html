@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!--<link rel="icon" href="https://yoamoprogramar.com/wp-content/uploads/2018/01/CRUD.png" type="image/x-icon">-->
+  <title>doGET Test</title>
+  <!--Bootstrap-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+  <script>
+
+    var script_url = "https://script.google.com/macros/s/AKfycbz4eduFaJ9FhkcJ80ds_OlR8pbF-7XU3l8eFQYZ-dU/dev";
+
+
+    function getData() {
+      var datos= {"response":$('#local').val()};
+      var request = jQuery.ajax({
+        crossDomain: true,
+        url: script_url,
+        type: "GET",
+        data: datos,
+        dataType: "jsonp",
+
+        success: function(responseData, textStatus, jqXHR) {
+          var value = responseData.response;
+          $('#remote').val(value);
+        },
+        error: function (responseData, textStatus, errorThrown) {
+          alert('GET failed.');
+        }
+      });
+    }
+
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
+  </script>
+</head>
+<body>
+  <div class="container">
+
+    <div class="jumbotron">
+      <h2>doGet() Test App</h2>
+      <h4>WEB APPLICATION USING GOOGLE APP SCRIPT (GAS)</h4>
+      <h6>This is a simple application, You can develop your own logic based on your requiremets.
+      Be careful with the parameters you are sending, it should match the parameters that are received in GAS.</h6>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">        
+        <div id="res"></div>
+        <div class="form-group" style="background-color: #66ccff" align="center">
+          <label for="in">Send to server  <span class="glyphicon glyphicon-upload"></span></label>
+          <input type="text" class="form-control input-sm" id="local" placeholder="write a 'string' of data to send">
+        </div>
+        <div align="right">
+          <button type="button" class="btn btn-default btn-sm" onclick="getData();">
+            <span class="glyphicon glyphicon-send"></span> Upload
+          </button>
+        </div>
+        <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+        <div class="form-group" style="background-color: #66ccff" align="center">
+          <label for="in">Receive from server  <span class="glyphicon glyphicon-download"></span></label>
+          <input type="text" class="form-control input-sm" id="remote" readonly placeholder="data received">
+        </div> 
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+  </div>
+</body>
+<html>
