@@ -88,16 +88,11 @@ function makeAjax(url){
 
 function ctrlq(e) {
 f = e;  // <-- hay que arreglar esto
-var i;
-var j;
-var k;
-var tb=""; // tabla de despliegue de datos
-var fm=""; // forma de entrada de datos
 console.log(e.action+" : "+e.result);
 $("#loader").hide();
 $("#tableData").html(createTable(e.spreadsheet+" : "+e.sheet,e.data));
-$("#newForm").html(createForm(e.data));
-$("#inputForm").hide();
+$("#newForm").html(createForm(e.spreadsheet+" : "+e.sheet,e.data));
+$("#formData").hide();
 $("#showData").show();
 $("#loader").hide();
 resetInputs();
@@ -108,7 +103,7 @@ function setForEdit(row){
 	for(i=0; i<f.data[0].length; i++) {
 		$("#input"+i).val(f.data[row][i]);
 	}
-	$("#inputForm").show();
+	$("#formData").show();
 	$("#showData").hide();
 }
 
@@ -117,7 +112,7 @@ function resetInputs(){
 }
 
 function newRecord(){
-	$("#inputForm").show();
+	$("#formData").show();
 	$("#showData").hide();
 }
 
@@ -147,11 +142,13 @@ function createTable(title,data){
 			tb+='</tr>';
 	}
 	tb += "</table>";
+	tb += '<div align="right"><a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class="glyphicon glyphicon-plus-sign" onclick="newRecord()" style="font-size:40px;color: #32CD32"></span></a></div><br>';
 	return tb;
 }
 
-function createForm(data){
-	var fm="";
+function createForm(title,data){
+	var fm="";//<h3>"+title+"</h3>";
+	$('#formTitle').html(title);
 	for(i=0; i<data[0].length; i++) {
 		fm+='<div class="form-group"><label for="'+data[0][i]+'">'+data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+data[0][i]+'"></div>';
 	}
@@ -160,6 +157,8 @@ function createForm(data){
 
 $(document).ready(function() {
 	read_value();
+	$("#formData").hide();
+
 $('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
 
 $('#buttonResetValues').click(
@@ -170,7 +169,7 @@ $('#buttonResetValues').click(
 
 $('#buttonList').click(
 	function(){
-		$("#inputForm").hide();
+		$("#formData").hide();
 		$("#showData").show();
 	}
 	);        
@@ -202,8 +201,9 @@ $('#buttonDelete').click(
 
 
 		<div class="row">
-			<div class="col-sm-4"></div>
-			<div class="col-sm-4" style="text-align: left;" id="inputForm" >
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6" style="text-align: left;" id="formData" >
+				<h3 id="formTitle"></h3>
 				<div class="btn-group">
 					<button type="button" id="buttonResetValues" class="btn btn-default btn-sm">
 						<span class="glyphicon glyphicon-erase"></span> Reset
@@ -220,7 +220,7 @@ $('#buttonDelete').click(
 				</div>
 				<form>
 				</form>
-				<script>$("#inputForm").hide();</script>
+				<!--<script>$("#formData").hide();</script>-->
 				<div id="newForm"></div>
 
 			</div>
@@ -232,12 +232,8 @@ $('#buttonDelete').click(
 
 		<div id="showData">
 			<div id="tableData" align="center"></div>
-			<div align="right">
-				<a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='font-size:40px;color: #32CD32'></span></a>
-			</div>
-			<br>
 		</div>
-		<script>$("#showData").hide()</script>
+		<!--<script>$("#showData").hide()</script>-->
 		<!--<p id="re"></p>-->
 		<div class="well" align="center">
 			<h6>@EdFasano70 2018 | All Rights Reserved</h6>
