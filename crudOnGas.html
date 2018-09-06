@@ -86,27 +86,6 @@ function makeAjax(url){
 	});
 }
 
-function createTable(title,data){
-	var tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
-	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
-		tb+="<tr></thead>";
-	for (i = 1; i < data.length; i++) {
-		tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
-		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
-			tb+='</tr>';
-	}
-	tb += "</table>";
-	return tb;
-}
-
-function createForm(data){
-	var fm="";
-	for(i=0; i<data[0].length; i++) {
-		fm+='<div class="form-group"><label for="'+data[0][i]+'">'+data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+data[0][i]+'"></div>';
-	}
-	return fm;
-}
-
 function ctrlq(e) {
 f = e;  // <-- hay que arreglar esto
 var i;
@@ -143,7 +122,7 @@ function newRecord(){
 }
 
 function showEditIcon(row){
-	$("#editRecordIcon"+row).show();
+	$(row).find('#editRecordIcon').show();
 }
 
 function hideEditIcons(){
@@ -156,6 +135,27 @@ function getFormParams(){
 		param.push($("#input"+i).val());
 	}
 	return param
+}
+
+function createTable(title,data){
+	var tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
+	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
+		tb+="<tr></thead>";
+	for (i = 1; i < data.length; i++) {
+		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')" onMouseEnter="showEditIcon(this)" onMouseLeave="hideEditIcons()"><td align="center"><span id="editRecordIcon" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
+		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
+			tb+='</tr>';
+	}
+	tb += "</table>";
+	return tb;
+}
+
+function createForm(data){
+	var fm="";
+	for(i=0; i<data[0].length; i++) {
+		fm+='<div class="form-group"><label for="'+data[0][i]+'">'+data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+data[0][i]+'"></div>';
+	}
+	return fm;
 }
 
 $(document).ready(function() {
@@ -186,6 +186,7 @@ $('#buttonDelete').click(
 		delete_value();
 	}
 	);
+
 });
 
 </script>
