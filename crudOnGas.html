@@ -1,249 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="https://yoamoprogramar.com/wp-content/uploads/2018/01/CRUD.png" type="image/x-icon">
-    <title>C.R.U.D. OPERATION ON GOOGLE SPREAD SHEET</title>
-    <!--Bootstrap-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" href="https://yoamoprogramar.com/wp-content/uploads/2018/01/CRUD.png" type="image/x-icon">
+	<title>C.R.U.D. OPERATION ON GOOGLE SPREAD SHEET</title>
+	<!--Bootstrap-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
-    <script>
-      //var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
-      var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
-      var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
-      var table      = "CLIENTES";
-      
-      var f; //LA VARIALE GLOBAL que contiene todos los parámetros
+	<script>
+//var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
+var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
+var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
+var table      = "CLIENTES";
 
-      function update_value(){
-        bootbox.confirm({
-          size:'small',
-          message:"Are you sure?",
-          callback: function(result){ /* your callback code */ 
-          if(result==true){
-            $("#loader").show();
-            var dataToSend = {
-              callback : 'ctrlq',
-              database : database,
-              table    : table,
-              action   : 'U',
-              row      : getFormParams()
-            }
-            var url =script_url+'?data='+JSON.stringify(dataToSend);    
-            console.log('update: url= '+url);
-            makeAjax(url);
-          }
-        }
-        });
-      }
+var f; //LA VARIALE GLOBAL que contiene todos los parámetros
 
-      function read_value() {
-        $("#loader").show();
-        var dataToSend = {
-          callback : 'ctrlq',
-          database : database,
-          table    : table,
-          action   : 'R'
-        };
-        var url =script_url+'?data='+JSON.stringify(dataToSend);
-        console.log('read: url= '+url);
-        makeAjax(url);
-      }
+function update_value(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				$("#loader").show();
+				var dataToSend = {
+					callback : 'ctrlq',
+					database : database,
+					table    : table,
+					action   : 'U',
+					row      : getFormParams()
+				}
+				var url =script_url+'?data='+JSON.stringify(dataToSend);    
+				console.log('update: url= '+url);
+				makeAjax(url);
+			}
+		}
+	});
+}
 
-      function delete_value(){
-        bootbox.confirm({
-          size:'small',
-          message:"Are you sure to delete record?",
-          callback: function(result){ /* your callback code */ 
-          if(result==true){
-            $("#loader").show();
-            var dataToSend = {
-              callback : 'ctrlq',
-              database : database,
-              table    : table,
-              action   : 'D',
-              row      : getFormParams()
-            };
-            var url =script_url+'?data='+JSON.stringify(dataToSend);
-            console.log('delete: url= '+url);
-            makeAjax(url);
-          }
-        }
-        });
-      }
+function read_value() {
+	$("#loader").show();
+	var dataToSend = {
+		callback : 'ctrlq',
+		database : database,
+		table    : table,
+		action   : 'R'
+	};
+	var url =script_url+'?data='+JSON.stringify(dataToSend);
+	console.log('read: url= '+url);
+	makeAjax(url);
+}
 
-      function makeAjax(url){
-        var request = jQuery.ajax({
-          crossDomain: true,
-          url: url,
-          method: "GET",
-          dataType: "jsonp"
-        });
-      }
+function delete_value(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to delete record?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				$("#loader").show();
+				var dataToSend = {
+					callback : 'ctrlq',
+					database : database,
+					table    : table,
+					action   : 'D',
+					row      : getFormParams()
+				};
+				var url =script_url+'?data='+JSON.stringify(dataToSend);
+				console.log('delete: url= '+url);
+				makeAjax(url);
+			}
+		}
+	});
+}
 
-      function ctrlq(e) {
-        f = e;  // <-- hay que arreglar esto
-        var i;
-        var j;
-        var k;
-        var tb=""; // tabla de despliegue de datos
-        var fm=""; // forma de entrada de datos
+function makeAjax(url){
+	var request = jQuery.ajax({
+		crossDomain: true,
+		url: url,
+		method: "GET",
+		dataType: "jsonp"
+	});
+}
 
-        console.log(e.action+" : "+e.result);
-        $("#loader").hide();
-        
-        tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+e.spreadsheet+" : "+e.sheet+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
-        for(i=0; i<e.data[0].length; i++) {
-          tb += "<td><b>"+e.data[0][i]+"</b></td>";
-        }
-        tb+="<tr></thead>";
-        for (i = 1; i < e.data.length; i++) {
-          tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
+function createTable(title,data){
+	var tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
+	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
+		tb+="<tr></thead>";
+	for (i = 1; i < data.length; i++) {
+		tb += '<tr onClick="setForEdit('+i+')" onMouseEnter="showEditIcon('+i+')" onMouseLeave="hideEditIcons()" ><td align="center"><span id="editRecordIcon'+i+'" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
+		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
+			tb+='</tr>';
+	}
+	tb += "</table>";
+	return tb;
+}
 
-            for(j=0;j<e.data[0].length;j++) tb+='<td>'+e.data[i][j]+'</td>';
-          
-          tb+='</tr>';
-        }
-        tb += "</table>";
+function createForm(data){
+	var fm="";
+	for(i=0; i<data[0].length; i++) {
+		fm+='<div class="form-group"><label for="'+data[0][i]+'">'+data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+data[0][i]+'"></div>';
+	}
+	return fm;
+}
 
-        for(i=0; i<e.data[0].length; i++) {
-          fm+='<div class="form-group"><label for="'+e.data[0][i]+'">'+e.data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+e.data[0][i]+'"></div>';
-        }
+function ctrlq(e) {
+f = e;  // <-- hay que arreglar esto
+var i;
+var j;
+var k;
+var tb=""; // tabla de despliegue de datos
+var fm=""; // forma de entrada de datos
+console.log(e.action+" : "+e.result);
+$("#loader").hide();
+$("#tableData").html(createTable(e.spreadsheet+" : "+e.sheet,e.data));
+$("#newForm").html(createForm(e.data));
+$("#inputForm").hide();
+$("#showData").show();
+$("#loader").hide();
+resetInputs();
+hideEditIcons();
+}
 
-        $("#tableData").html(tb);
-        $("#newForm").html(fm);
-        $("#inputForm").hide();
-        $("#showData").show();
-        $("#loader").hide();
-        resetInputs();
-        hideEditIcons();
-    	}
-      
-      function setForEdit(row){
-        for(i=0; i<f.data[0].length; i++) {
-          $("#input"+i).val(f.data[row][i]);
-        }
-        $("#inputForm").show();
-        $("#showData").hide();
-      }
+function setForEdit(row){
+	for(i=0; i<f.data[0].length; i++) {
+		$("#input"+i).val(f.data[row][i]);
+	}
+	$("#inputForm").show();
+	$("#showData").hide();
+}
 
-      function resetInputs(){
-        $("input").val("");
-      }
+function resetInputs(){
+	$("input").val("");
+}
 
-      function newRecord(){
-        $("#inputForm").show();
-        $("#showData").hide();
-      }
+function newRecord(){
+	$("#inputForm").show();
+	$("#showData").hide();
+}
 
-      function showEditIcon(row){
-        $("#editRecordIcon"+row).show();
-      }
+function showEditIcon(row){
+	$("#editRecordIcon"+row).show();
+}
 
-      function hideEditIcons(){
-        $("[id*=editRecordIcon]").hide();
-      }
+function hideEditIcons(){
+	$("[id*=editRecordIcon]").hide();
+}
 
-      function getFormParams(){
-        var param=[];
-        for(var i=0; i<f.data[0].length; i++) {
-          param.push($("#input"+i).val());
-        }
-        return param
-      }
+function getFormParams(){
+	var param=[];
+	for(var i=0; i<f.data[0].length; i++) {
+		param.push($("#input"+i).val());
+	}
+	return param
+}
 
-      $(document).ready(function() {
-        read_value();
-        $('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
-        
-        $('#buttonResetValues').click(
-          function(){
-            resetInputs();
-          }
-        );
+$(document).ready(function() {
+	read_value();
+$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
 
-        $('#buttonList').click(
-          function(){
-            $("#inputForm").hide();
-            $("#showData").show();
-          }
-        );        
+$('#buttonResetValues').click(
+	function(){
+		resetInputs();
+	}
+	);
 
-        $('#buttonSave').click(
-          function(){
-            update_value();
-          }
-        );
+$('#buttonList').click(
+	function(){
+		$("#inputForm").hide();
+		$("#showData").show();
+	}
+	);        
 
-        $('#buttonDelete').click(
-          function(){
-            delete_value();
-          }
-        );
-      });
-      
-    </script>
-  </head>
-  <body>
-    <div class="container">
-    <div class="jumbotron">
-      <h2>CRUD OPERATION ON GOOGLE SPREAD SHEET</h2>
-      <h4>WEB APPLICATION USING GOOGLE APP SCRIPT (GAS)</h4>
-      <h6>This is a simple application, You can develop your own logic based on your requiremets.
-      Be careful with the parameters you are sending, it should match the parameters that are received in GAS.</h6>
-    </div>
+$('#buttonSave').click(
+	function(){
+		update_value();
+	}
+	);
 
-       
-      <div class="row">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4" style="text-align: left;" id="inputForm" >
-        <div class="btn-group">
-          <button type="button" id="buttonResetValues" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-erase"></span> Reset
-          </button>
-          <button type="button" id="buttonList" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-list"></span> List
-          </button>
-          <button type="button" id="buttonSave" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-save"></span> Save
-          </button>          
-          <button type="button" id="buttonDelete" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-remove"></span> Delete
-          </button>
-        </div>
-      <form>
-      </form>
-      <script>$("#inputForm").hide();</script>
-            <div id="newForm"></div>
+$('#buttonDelete').click(
+	function(){
+		delete_value();
+	}
+	);
+});
 
-      </div>
+</script>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h2>CRUD OPERATION ON GOOGLE SPREAD SHEET</h2>
+			<h4>WEB APPLICATION USING GOOGLE APP SCRIPT (GAS)</h4>
+			<h6>This is a simple application, You can develop your own logic based on your requiremets.
+			Be careful with the parameters you are sending, it should match the parameters that are received in GAS.</h6>
+		</div>
 
-      </div>
-      <div class="alert alert-info" id="loader" align="center">
-        <strong>Info!  </strong> <i class="fa fa-spinner fa-spin" style="font-size:24px; color:green"></i>  Processing... Wait a few seconds... 
-      </div>
-      
-      <div id="showData">
-        <div id="tableData" align="center"></div>
-        <div align="right">
-          <a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='font-size:40px;color: #32CD32'></span></a>
-        </div>
-        <br>
-      </div>
-      <script>$("#showData").hide()</script>
-    <!--<p id="re"></p>-->
-    <div class="well" align="center">
-      <h6>@EdFasano70 2018 | All Rights Reserved</h6>
-      <h6>Based on ANDROID LABS' script from 2017</h6>
-    </div>
-    </div>
-  
-  </body>
+
+		<div class="row">
+			<div class="col-sm-4"></div>
+			<div class="col-sm-4" style="text-align: left;" id="inputForm" >
+				<div class="btn-group">
+					<button type="button" id="buttonResetValues" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-erase"></span> Reset
+					</button>
+					<button type="button" id="buttonList" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-list"></span> List
+					</button>
+					<button type="button" id="buttonSave" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>          
+					<button type="button" id="buttonDelete" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-remove"></span> Delete
+					</button>
+				</div>
+				<form>
+				</form>
+				<script>$("#inputForm").hide();</script>
+				<div id="newForm"></div>
+
+			</div>
+
+		</div>
+		<div class="alert alert-info" id="loader" align="center">
+			<strong>Info!  </strong> <i class="fa fa-spinner fa-spin" style="font-size:24px; color:green"></i>  Processing... Wait a few seconds... 
+		</div>
+
+		<div id="showData">
+			<div id="tableData" align="center"></div>
+			<div align="right">
+				<a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='font-size:40px;color: #32CD32'></span></a>
+			</div>
+			<br>
+		</div>
+		<script>$("#showData").hide()</script>
+		<!--<p id="re"></p>-->
+		<div class="well" align="center">
+			<h6>@EdFasano70 2018 | All Rights Reserved</h6>
+			<h6>Based on ANDROID LABS' script from 2017</h6>
+		</div>
+	</div>
+
+</body>
 <html>
 
 
