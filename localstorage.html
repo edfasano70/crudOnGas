@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAQAAABIkb+zAAACMklEQVR4Ae3ZA6ycURCG4alt27yrf766DWrEZVDG5m1QhVVcm3GNqGZcO1ZtN9o9dfvnrHdPc3bSeSdaTfZZgzRN0zTte+jKC/k83sJU2LzFOVRHulCuqhrjMKdgKnc4hf1VjSlzaMg3YQTM1d71MgO2wcgY3kzpcW9OigEkuTfZYSWMnAlWkB3fkATgG2SHL5IA+ER29lnIe3munwIUoAAFKEAAIFjCi0UDXG5SQPEFc2BggjliAS53KaD4gsm/dyWmiAS436aAYuJh4W08TAbAwz4FwJQ35KrSFwfTYEqbYBqRH4BV9/owxU9VXSKfACteD1P48Hqy8w0givYs+KHTjcgXIE94CpNnHpCdZ4BVYkrOh84YogoHEOFBVsAdIgGAcl/1q9rzcbyEKXBe8vGq9i4BtXMCalOeoi3wGKbIeRy0cQbASZjsw8cpT9gNU/zwXmeAcj864EUpALxwBahhveJ3jHey9tb4N5+tHAGwPbTjPf0K70PHrq1kQGgLz6JQvCC0WQKgXxOy6t1UAADLYGBwmbKEyzAwwVyXP8U4AFjLRlGOEuPz7PYL4EdUm/JVGy88ANymAAW4TwEKUIAC3sP4GGcAviEdsFo4IOjGSdEAIt4qHICGfEM0gKiqMR/ilGDA99AV1Xweb8UBXFXsFZYNUIACFKAABbh+I3OwRzRAAQrgR6Vs4UfeAG7+ZsWeigHE2pbyR3e0hU+AFTrwMbwqeMMrPoYOpGmapv3nfQVBL2bhxbmb2wAAAABJRU5ErkJggg==" type="image/x-icon">
+  <title>doGET Test</title>
+  <!--Bootstrap-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+  <script>
+
+
+$(document).ready(function(){
+
+  $('#buttonSave').on('click', function(){
+    localStorage.setItem("valor",$('#comment').val());
+    console.log('guardamos el valor');
+  });
+
+  $('#buttonOpen').on('click', function(){
+    $('#comment').val(localStorage.getItem("valor"));
+    console.log('recuperamos el valor');
+  });
+
+  $('#buttonErase').on('click', function(){
+    $('#comment').val('');
+    console.log('borrar');
+  });
+
+
+});
+
+</script>
+</head>
+<body>
+  <div class="container">
+
+    <div class="jumbotron">
+      <h2>doGet() Test App</h2>
+      <h4>WEB APPLICATION USING GOOGLE APP SCRIPT (GAS)</h4>
+      <h6>This is a simple application, You can develop your own logic based on your requiremets.
+      Be careful with the parameters you are sending, it should match the parameters that are received in GAS.</h6>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+
+
+        <dl>
+          <h4>What does this app do?</h4>
+
+
+
+      </div>
+      <div class="col-sm-4" align="center">        
+       <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea class="form-control" rows="5" id="comment"></textarea>
+      </div> 
+        <button id="buttonSave" type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-save"></span> Save
+        </button>
+        <button id="buttonOpen" type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-open"></span> Open
+        </button>
+        <button id="buttonErase" type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-erase"></span> Erase
+        </button>
+      </div>
+          <div class="col-sm-4">
+            <h4>Data JSON</h4>
+            <div class="panel panel-default">
+              <div class="panel-heading">Data Sent</div>
+              <div class="panel-body" id="dataSentPanel">No data yet</div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">Data Received</div>
+              <div class="panel-body" id="dataReceivedPanel">No data yet</div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="well" align="center">
+            <h6><i class="fa fa-twitter"></i>edmundofasano <i class="fa fa-instagram"></i>EdFasano70 2018 | All Rights Reserved</h6>
+          </div>
+        </div>
+
+      </div>
+    </body>
+    <html>
